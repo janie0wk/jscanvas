@@ -26,6 +26,7 @@
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
     var color;
+    let painting = false;
 
     window.addEventListener("load", () => {
         canvas.width = window.innerWidth * 0.8;
@@ -33,7 +34,6 @@
     })
 
     window.addEventListener("keydown", function(e) {
-        console.log("Drawing in " + ctx.color)
         if (e.keyCode == 71) {
             ctx.color = "green";
         }
@@ -49,17 +49,34 @@
         if (e.keyCode == 32) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+
+        //arrowUp
+        if (e.keyCode == 38) {
+            painting = false;
+            ctx.beginPath();
+        }
+
+        //arrowDown
+        if (e.keyCode == 40) {
+            painting = true;
+            draw(e);
+        }
     })
 
     window.addEventListener("change", () => {
         ctx.color = document.getElementById("picker").value;
     })
 
-    let painting = false;
+    function draw(e) {
+        if (!painting) return;
+        ctx.lineWidth = 15;
+        ctx.lineCap = "round";
 
-    function start(e) {
-        painting = true;
-        draw(e);
+        ctx.strokeStyle = ctx.color;
+        ctx.lineTo(e.clientX, e.clientY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX, e.clientY);
     }
 
     function finish() {
@@ -67,21 +84,19 @@
         ctx.beginPath();
     }
 
-    function draw(e) {
-        console.log("I am drawing");
-        if (!painting) return;
-        ctx.lineWidth = 15;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = ctx.color;
-        ctx.lineTo(e.clientX, e.clientY);
-        ctx.stroke();
-        ctx.moveTo(e.clientX, e.clientY);
-        ctx.beginPath();
+    function start(e) {
+        painting = true;
+        draw(e);
     }
 
-    canvas.addEventListener("mousedown", start);
+    canvas.addEventListener("mousemove", start);
     canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", finish);
+    canvas.addEventListener("keydown", () => {
+        if (e.keyCode == 38) {
+            finish();
+            console.log("finish")
+        }
+    })
 
 </script>
 
