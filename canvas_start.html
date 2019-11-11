@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drawing Area</title>
     <!-- You can add your style here rather than in an external style sheet. -->
@@ -23,11 +24,68 @@
 
 <script>
     var canvas = document.getElementById("myCanvas");
-    
-    canvas.width = window.innerWidth * 0.8;
-    canvas.height = window.innerHeight * 0.8;
-    
     var ctx = canvas.getContext("2d");
-    
+    var color = document.getElementById("picker");
+
+    window.addEventListener("load", () => {
+        canvas.width = window.innerWidth * 0.8;
+        canvas.height = window.innerHeight * 0.8;
+    })
+
+    window.addEventListener("keydown", function(e) {
+        console.log(e);
+        var k = e.keyCode;
+        if (k == 69) {
+            color = "green";
+        }
+        if (k = 66) {
+            color = "blue";
+        }
+        if (k = 82) {
+            color = "red";
+        }
+        if (k = 89) {
+            color = "yellow";
+        }
+        if (k = 32) {
+            cctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        return color;
+    })
+
+    window.addEventListener("change", function(color) {
+        color = document.getElementById("picker");
+        return color;
+    })
+
+    let painting = false;
+
+    function start(e) {
+        painting = true;
+        draw(e);
+    }
+
+    function finish() {
+        painting = false;
+        ctx.beginPath();
+    }
+
+    function draw(e) {
+        console.log("I am drawing");
+        if (!painting) return;
+        ctx.lineWidth = 15;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = color.value;
+        ctx.lineTo(e.clientX, e.clientY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX, e.clientY);
+    }
+
+    canvas.addEventListener("mousedown", start);
+    canvas.addEventListener("mouseup", finish);
+    canvas.addEventListener("mousemove", draw);
+
 </script>
+
 </html>
